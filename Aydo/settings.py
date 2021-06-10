@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'rest_framework',
     'knox',
+    'shop.apps.ShopConfig',
 ]
 
 
