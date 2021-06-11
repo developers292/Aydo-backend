@@ -43,22 +43,3 @@ class UserAPI(generics.RetrieveAPIView):
 
 
 
-class GetSessionKey(APIView):
-  permission_classes = [
-    permissions.IsAuthenticated,
-  ]
-
-  def get(self, request, *args, **kwargs):
-    #request.session['cart'] = {'id':'2'}
-    #request.session.modified = True
-    
-    context = {
-      'cart':request.session['cart']
-    }
-    """
-    context = {
-      'stat':'ok'
-    }
-    """
-    return Response(context, status=200)
-

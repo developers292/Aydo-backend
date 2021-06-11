@@ -1,6 +1,6 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Category
@@ -49,4 +49,13 @@ class DetailProductAPI(APIView):
 
 
 
+
+class ListCategoryAPI(APIView):
+    permission_classes = [permissions.AllowAny,]
+
+    def get(self, request):
         
+        categories = Category.objects.filter(parent=None)
+        categories_serialized = CategorySerializer(categories, many=True)
+        return Response(categories_serialized.data)
+
