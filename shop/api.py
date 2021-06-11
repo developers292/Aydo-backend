@@ -44,8 +44,8 @@ class DetailProductAPI(APIView):
     def get(self, request, pk):
 
         product = self.get_object(pk)
-        product_serializer = ProductSerializer(product)
-        return Response(product_serializer.data)
+        product_serialized = ProductSerializer(product)
+        return Response(product_serialized.data)
 
 
 
@@ -58,4 +58,21 @@ class ListCategoryAPI(APIView):
         categories = Category.objects.filter(parent=None)
         categories_serialized = CategorySerializer(categories, many=True)
         return Response(categories_serialized.data)
+
+
+class DetailCategoryAPI(APIView):
+    permission_classes = [permissions.AllowAny,]
+
+    def get_object(self, pk):
+
+        try:
+            return Category.objects.get(id=pk)
+        except Category.DoesNotExist:
+            raise Http404
+    
+    def get(self, request, pk):
+
+        category = self.get_object(pk)
+        category_serialized = CategorySerializer(category)
+        return Response(category_serialized.data)
 

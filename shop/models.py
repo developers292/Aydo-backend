@@ -31,10 +31,6 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('shop:product_list_by_category', args=[self.slug])
 
-    def natural_key(self):
-        return django_sub_dict(self) 
-    
-
 
 
 
@@ -79,8 +75,6 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse("shop:product_detail", args=[self.id, self.slug])
     
-    def natural_key(self):
-        return django_sub_dict(self) 
 
 
 
