@@ -16,6 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+APPEND_SLASH = False
 
 # Application definition
 
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'shop.apps.ShopConfig',
+    'cart.apps.CartConfig',
 ]
 
 
