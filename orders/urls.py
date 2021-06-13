@@ -4,4 +4,5 @@ from . import api
 urlpatterns = [
   path('province', api.ListProvinceAPI.as_view(), name='province_list'),
   path('city', api.ListCityAPI.as_view(), name='city_list'),
+  path('create', api.OrderCreateAPI.as_view(), name='order_create'),
 ]
