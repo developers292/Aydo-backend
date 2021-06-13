@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import CartSerializer
+from .serializers import CartReadSerializer, CartWriteSerializer
 from rest_framework import permissions
 from .models import Cart
 from rest_framework import status
@@ -17,12 +17,12 @@ class ListCartAPI(APIView):
 
     def get(self, request):
         cart = Cart.objects.filter(owner=self.request.user)
-        cart_serialized = CartSerializer(cart, many=True)
+        cart_serialized = CartReadSerializer(cart, many=True)
         return Response(cart_serialized.data)
     
     def post(self, request):
 
-        serializer = CartSerializer(data=request.data)
+        serializer = CartWriteSerializer(data=request.data)
         if serializer.is_valid():
             product = serializer.validated_data['product']
             owner = self.request.user
@@ -42,7 +42,7 @@ class ListCartAPI(APIView):
 class DetailCartAPI(APIView):
     permission_classes = [permissions.IsAuthenticated,]
     """
-    update or delete an Cart instance
+    update or delete a Cart instance
     """
 
     def get_object(self, pk):
@@ -54,7 +54,7 @@ class DetailCartAPI(APIView):
     def put(self, request, pk):
 
         cart = self.get_object(pk)
-        serializer = CartSerializer(cart, data=request.data)
+        serializer = CartWriteSerializer(cart, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(owner=self.request.user)
             return Response(serializer.data)
