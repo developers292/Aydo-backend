@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'knox',
     'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
 ]
 
 
