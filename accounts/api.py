@@ -1,8 +1,9 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 from rest_framework.views import APIView
+from rest_framework import status
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
@@ -38,14 +39,31 @@ class LoginAPI(generics.GenericAPIView):
     })
 
 # Get User API
-class UserAPI(generics.RetrieveAPIView):
-  permission_classes = [
-    permissions.IsAuthenticated,
-  ]
+class UserAPI(generics.RetrieveUpdateAPIView):
+  permission_classes = [permissions.IsAuthenticated,]
   serializer_class = UserSerializer
 
   def get_object(self):
     return self.request.user
+  
+  def get_serializer(self, *args, **kwargs):
+    kwargs['partial'] = True
+    return super(UserAPI, self).get_serializer(*args, **kwargs)
 
+
+
+class ChangePasswordAPI(generics.GenericAPIView):
+  permission_classes = [permissions.IsAuthenticated,]
+  serializer_class = ChangePasswordSerializer
+
+  def get_object(self):
+    return self.request.user
+  
+  def put(self, request, *args, **kwargs):
+
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.validated_data
+    return Response(status=status.HTTP_200_OK)
 
 
