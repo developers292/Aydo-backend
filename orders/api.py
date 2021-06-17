@@ -67,7 +67,8 @@ class OrderCreateAPI(APIView):
             
             context = {
                 'ref_code':order.ref_code,
-                'order_id':order.id
+                'order_id':order.id,
+                'online_payment':order.online_payment
             }
             return Response(context, status=status.HTTP_201_CREATED)
         

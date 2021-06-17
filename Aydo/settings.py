@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 
@@ -136,3 +137,10 @@ AUTH_USER_MODEL = 'accounts.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+ZARINPAL = {
+    'MERCHANT':'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
+    'CallbackURL':'http://localhost:8000/api/payment/zarinpal-verify',
+    'wsdl':'https://banktest.ir/gateway/zarinpal/pg/services/WebGate/wsdl?wsdl'
+}

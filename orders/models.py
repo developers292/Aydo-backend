@@ -73,6 +73,7 @@ class Order(models.Model):
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
     online_payment = models.BooleanField(default=True) # Fasle -> پرداخت در محل
+    payment_verified = models.BooleanField(default=False)
     
     class Meta:
         ordering = ('-created',)
