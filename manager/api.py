@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework import permissions
 from .permissions import IsManager
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
-from shop.models import Product, Category
+from shop.models import Product, Category, AdditionalProductInfo
 from django.http import Http404
 
 
@@ -123,12 +123,12 @@ class AddProductAdditionalInfoAPI(APIView):
     def validate(self, data, related_product):
         
         for key,value in data.items():
-            data = {
+            obj = {
                 "key":key,
                 "value":value,
                 "product":related_product.id
             }
-            serializer = AdditionalProductInfoWriteSerializer(data=data)
+            serializer = AdditionalProductInfoWriteSerializer(data=obj)
             serializer.is_valid(raise_exception=True)
 
 
@@ -147,6 +147,44 @@ class AddProductAdditionalInfoAPI(APIView):
             serializer.save()
         
         return Response(status=status.HTTP_201_CREATED)
+    
+
+
+class UpdateRemoveProductAdditionalInfoAPI(APIView):
+    """
+    update or remove an additional info
+    instance on a product
+    """
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
+    def get_object(self, pk):
+
+        try:
+            return AdditionalProductInfo.objects.get(id=pk)
+        except AdditionalProductInfo.DoesNotExist:
+            raise Http404
+    
+
+    def put(self, request, pk):
+
+        obj = self.get_object(pk)
+        serializer = AdditionalProductInfoWriteSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    def delete(self, request, pk):
+
+        obj = self.get_object(pk)
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
             
 
         
