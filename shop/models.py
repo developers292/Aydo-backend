@@ -1,6 +1,5 @@
 from django.db import models
-from django.urls import reverse
-from .utils import django_sub_dict
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -103,5 +102,44 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+
+class VerifiedActiveManager(models.Manager):
+    
+    def get_queryset(self):
+        return super(VerifiedActiveManager,
+                    self).get_queryset().filter(
+                        is_verified=True,
+                        active=True
+                    )
+
+
+class Comment(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name='comments',
+        on_delete=models.CASCADE
+    )
+    owner =  models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='product_comments',
+        on_delete=models.CASCADE
+    )
+    body = models.TextField()
+    is_verified = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+    verified_and_active = VerifiedActiveManager()
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return f'Comment by {self.owner.phone_no} on {self.product}'
+    
     
     
