@@ -106,3 +106,21 @@ class AddCommentAPI(APIView):
 
 
 
+
+
+class RemoveCommentAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+
+    def get_object(self, pk):
+
+        try:
+            return Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+    
+
+    def delete(self, request, pk):
+
+        comment = self.get_object(pk)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
