@@ -28,8 +28,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-    def get_absolute_url(self):
-        return reverse('shop:product_list_by_category', args=[self.slug])
 
 
 
@@ -72,9 +70,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse("shop:product_detail", args=[self.id, self.slug])
-    
 
 
 
@@ -86,6 +81,9 @@ class AdditionalProductInfo(models.Model):
     )
     key = models.CharField(max_length=150)
     value = models.CharField(max_length=255)
+    
+    class Meta:
+        unique_together = (('product','key'),)    
 
     def __str__(self):
         return str(self.id)

@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import CategoryWriteSerializer, ProductWriteSerializer
+from .serializers import CategoryWriteSerializer, ProductWriteSerializer, AdditionalProductInfoWriteSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
@@ -102,3 +102,52 @@ class UpdateRemoveProductAPI(APIView):
         product = self.get_object(pk)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class AddProductAdditionalInfoAPI(APIView):
+    """
+    Add any key,value data to a 
+    product as additional info
+    """
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
+    def get_object(self, pk):
+
+        try:
+            return Product.objects.get(id=pk)
+        except Product.DoesNotExist:
+            raise Http404
+    
+
+    def validate(self, data, related_product):
+        
+        for key,value in data.items():
+            data = {
+                "key":key,
+                "value":value,
+                "product":related_product.id
+            }
+            serializer = AdditionalProductInfoWriteSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+
+
+    def post(self, request, pk):
+        
+        product = self.get_object(pk)
+        self.validate(data=request.data, related_product=product)
+        for key,value in request.data.items():
+            data = {
+                "key":key,
+                "value":value,
+                "product":product.id
+            }
+            serializer = AdditionalProductInfoWriteSerializer(data=data)
+            serializer.is_valid(raise_exception=False)
+            serializer.save()
+        
+        return Response(status=status.HTTP_201_CREATED)
+            
+
+        
+

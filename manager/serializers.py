@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from shop.models import Category, Product
+from shop.models import Category, Product, AdditionalProductInfo
 
 
 
@@ -20,3 +20,33 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         model = Product
         exclude = ('created', 'updated')
         read_only_fields = ('id',)
+
+
+class AdditionalProductInfoWriteSerializer(serializers.ModelSerializer):
+    """ serializer for add, update and remove additional info to a product """
+
+    class Meta:
+        model = AdditionalProductInfo
+        fields = ('__all__')
+        read_only_fields = ('id',)
+        extra_kwargs = {
+            'key':{
+                'error_messages':{
+                    'required':'فیلد کلید باید ارسال شود',
+                    'blank':'مقدار کلید نمیتواند خالی باشد'
+                }
+            },
+            'value':{
+                'error_messages':{
+                    'required':'فیلد مقدار باید ارسال شود',
+                    'blank':'مقدار متناظر با یک کلید نمیتواند خالی باشد'
+                }
+            }
+        }
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('product', 'key'),
+                message="ثبت کلید تکراری برای محصول مجاز نیست"
+            )
+        ]
