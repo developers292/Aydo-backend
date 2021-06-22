@@ -32,4 +32,14 @@ urlpatterns = [
      api.UpdateRemoveProductAdditionalInfoAPI.as_view(), 
      name='update_remove_additional_info'
   ),
+  path(
+    'product/image/add/<int:pk>',
+     api.AddProductImageAPI.as_view(),
+     name='add_image_product'
+  ),
+  path(
+    'product/image/remove/<int:pk>',
+     api.RemoveProductImageAPI.as_view(),
+     name='remove_product_image'
+  ),
 ]

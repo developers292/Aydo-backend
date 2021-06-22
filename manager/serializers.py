@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from shop.models import Category, Product, AdditionalProductInfo
+from shop.models import Category, Product, AdditionalProductInfo, ProductImage
 
 
 
@@ -50,3 +50,11 @@ class AdditionalProductInfoWriteSerializer(serializers.ModelSerializer):
                 message="ثبت کلید تکراری برای محصول مجاز نیست"
             )
         ]
+
+
+class ProductImageWriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = ('__all__')
+        read_only_fields = ('id','product')

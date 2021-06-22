@@ -1,12 +1,15 @@
 from rest_framework.views import APIView
-from .serializers import CategoryWriteSerializer, ProductWriteSerializer, AdditionalProductInfoWriteSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from .permissions import IsManager
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
-from shop.models import Product, Category, AdditionalProductInfo
+from shop.models import Product, Category, AdditionalProductInfo, ProductImage
 from django.http import Http404
+from .serializers import (CategoryWriteSerializer,
+                          ProductWriteSerializer,
+                          AdditionalProductInfoWriteSerializer,
+                          ProductImageWriteSerializer)
 
 
 
@@ -183,6 +186,58 @@ class UpdateRemoveProductAdditionalInfoAPI(APIView):
         obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+
+class AddProductImageAPI(APIView):
+    """
+    add an image to product's image gallery
+    """
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
+
+    def get_object(self, pk):
+
+        try:
+            return Product.objects.get(id=pk)
+        except Product.DoesNotExist:
+            raise Http404
+
+
+    def post(self, request, pk):
+
+        product = self.get_object(pk)
+        serializer = ProductImageWriteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(product=product)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class RemoveProductImageAPI(APIView):
+    """
+    remove an image from product gallery
+    """
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
+    def get_object(self, pk):
+
+        try:
+            return ProductImage.objects.get(id=pk)
+        except ProductImage.DoesNotExist:
+            raise Http404
+    
+
+    def delete(self, request, pk):
+
+        obj = self.get_object(pk)
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
 
 
             
