@@ -47,16 +47,37 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 
+class ResetPasswordSerializer(serializers.Serializer):
+  password = serializers.CharField(write_only=True, min_length=4)
+  phone_no = serializers.CharField(write_only=True)
+
+  def validate(self, data):
+
+    try:
+      user = get_user_model().objects.get(phone_no=data['phone_no'])
+      return data
+    except get_user_model().DoesNotExist:
+      raise serializers.ValidationError('شماره تلفن نامعبتر است')
+  
+  def save(self):
+    """ set new password """
+    password = self.validated_data.pop('password')
+    user = get_user_model().objects.get(phone_no=self.validated_data.pop('phone_no'))
+    if password:
+      user.set_password(password)
+      user.save()
+
+
+
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
   class Meta:
     model = get_user_model()
     fields = ('id', 'phone_no', 'password')
-    extra_kwargs = {'password': {'write_only': True}}
+    extra_kwargs = {'password': {'write_only': True, 'min_length':4}}
 
   def create(self, validated_data):
     user = get_user_model().objects.create_user(validated_data['phone_no'],validated_data['password'])
-
     return user
 
 # Login Serializer
