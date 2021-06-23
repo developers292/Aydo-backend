@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'manager.apps.ManagerConfig',
+    'sms.apps.SmsConfig',
 ]
 
 
@@ -144,4 +145,9 @@ ZARINPAL = {
     'MERCHANT':'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
     'CallbackURL':'http://localhost:8000/api/payment/zarinpal-verify',
     'wsdl':'https://banktest.ir/gateway/zarinpal/pg/services/WebGate/wsdl?wsdl'
+}
+
+
+KAVENEGAR = {
+    'API_KEY':'744F584736306B51593231367535416C33636749446141353672726939794734787557626C5146744166343D'
 }
