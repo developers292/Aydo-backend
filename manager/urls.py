@@ -42,4 +42,14 @@ urlpatterns = [
      api.RemoveProductImageAPI.as_view(),
      name='remove_product_image'
   ),
+  path(
+    'users',
+     api.UserListAPI.as_view(),
+     name='list_users'
+  ),
+  path(
+    'users/edit/<int:pk>',
+    api.UserEditAPI.as_view(),
+    name='user_edit'
+  ),
 ]

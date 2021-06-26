@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
@@ -6,10 +7,13 @@ from .permissions import IsManager
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 from shop.models import Product, Category, AdditionalProductInfo, ProductImage
 from django.http import Http404
+from django.contrib.auth import get_user_model
+from accounts.serializers import UserSerializer
 from .serializers import (CategoryWriteSerializer,
                           ProductWriteSerializer,
                           AdditionalProductInfoWriteSerializer,
-                          ProductImageWriteSerializer)
+                          ProductImageWriteSerializer,
+                          UserEditSerializer)
 
 
 
@@ -237,6 +241,38 @@ class RemoveProductImageAPI(APIView):
         obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+class UserListAPI(generics.ListAPIView):
+  permission_classes = [permissions.IsAuthenticated, IsManager]
+  serializer_class = UserSerializer
+  
+  def get_queryset(self):
+      return get_user_model().objects.exclude(phone_no=self.request.user.phone_no)
+
+
+
+class UserEditAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
+
+    def get_object(self, pk):
+
+        try:
+            return get_user_model().objects.get(id=pk)
+        except get_user_model().DoesNotExist:
+            raise Http404
+
+
+    def put(self, request, pk):
+        
+        user = self.get_object(pk)
+        serializer = UserEditSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 

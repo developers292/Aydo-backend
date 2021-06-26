@@ -41,7 +41,7 @@ class LoginAPI(generics.GenericAPIView):
     })
 
 # Get User API
-class UserAPI(generics.RetrieveUpdateAPIView):
+class UserDetailAPI(generics.RetrieveUpdateAPIView):
   permission_classes = [permissions.IsAuthenticated,]
   serializer_class = UserSerializer
 
@@ -78,4 +78,5 @@ class ResetPasswordAPI(APIView):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(status=status.HTTP_200_OK)
+
 

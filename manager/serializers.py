@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from shop.models import Category, Product, AdditionalProductInfo, ProductImage
+from django.contrib.auth import get_user_model
 
 
 
@@ -58,3 +59,17 @@ class ProductImageWriteSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = ('__all__')
         read_only_fields = ('id','product')
+
+
+
+class UserEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id', 'phone_no', 'email',
+            'first_name', 'last_name',
+            'has_permission_to_view_prices',
+            'is_active'
+        )
+        read_only_fields = ('id',)

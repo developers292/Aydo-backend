@@ -11,10 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
       'id', 'phone_no', 'email',
       'first_name', 'last_name',
       'has_permission_to_view_prices',
+      'is_active'
     )
     read_only_fields = (
       'id', 'has_permission_to_view_prices',
-      'phone_no'
+      'phone_no', 'is_active'
     )
   
   
