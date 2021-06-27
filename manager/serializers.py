@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from shop.models import Category, Product, AdditionalProductInfo, ProductImage
+from shop.models import Category, Product, AdditionalProductInfo, ProductImage, Comment
 from django.contrib.auth import get_user_model
 
 
@@ -72,4 +72,12 @@ class UserEditSerializer(serializers.ModelSerializer):
             'has_permission_to_view_prices',
             'is_active'
         )
+        read_only_fields = ('id',)
+
+
+class CommentEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('__all__')
         read_only_fields = ('id',)

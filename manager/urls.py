@@ -62,4 +62,9 @@ urlpatterns = [
      api.CommentUserAPI.as_view(),
      name='user_comments'
   ),
+  path(
+    'comments/edit/<int:pk>',
+     api.CommentEditAPI.as_view(),
+     name='edit_comment'
+  ),
 ]

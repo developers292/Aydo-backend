@@ -15,7 +15,8 @@ from .serializers import (CategoryWriteSerializer,
                           ProductWriteSerializer,
                           AdditionalProductInfoWriteSerializer,
                           ProductImageWriteSerializer,
-                          UserEditSerializer)
+                          UserEditSerializer,
+                          CommentEditSerializer)
 
 
 
@@ -310,6 +311,31 @@ class CommentUserAPI(APIView):
 
 
             
+class CommentEditAPI(APIView):
+    """
+    Edit comment attrs , for example change is_verified,
+    active , or body of a comment
+    """
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+
+
+    def get_object(self, pk):
+
+        try:
+            return Comment.objects.get(id=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+    
+
+    def put(self, request, pk):
+
+        comment = self.get_object(pk)
+        serializer = CommentEditSerializer(comment, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         
 
