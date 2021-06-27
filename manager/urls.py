@@ -57,4 +57,9 @@ urlpatterns = [
      api.CommentListAPI.as_view(),
      name='list_comments'
   ),
+  path(
+    'comments/<int:pk>',
+     api.CommentUserAPI.as_view(),
+     name='user_comments'
+  ),
 ]

@@ -284,6 +284,27 @@ class CommentListAPI(generics.ListAPIView):
     serializer_class = CommentReadSerializer
     queryset = Comment.objects.all()
     pagination_class = CustomPagination
+
+
+
+
+class CommentUserAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+    
+    def get_object(self, pk):
+
+        try:
+            return get_user_model().objects.get(id=pk)
+        except get_user_model().DoesNotExist:
+            raise Http404
+    
+
+    def get(self, request, pk):
+
+        user = self.get_object(pk)
+        comments_serialized = CommentReadSerializer(user.product_comments.all(), many=True)
+        return Response(comments_serialized.data)
+
     
     
 
