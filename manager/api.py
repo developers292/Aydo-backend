@@ -5,10 +5,12 @@ from rest_framework import status
 from rest_framework import permissions
 from .permissions import IsManager
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
-from shop.models import Product, Category, AdditionalProductInfo, ProductImage
+from shop.models import Product, Category, AdditionalProductInfo, ProductImage, Comment
 from django.http import Http404
 from django.contrib.auth import get_user_model
 from accounts.serializers import UserSerializer
+from shop.serializers import CommentReadSerializer
+from Aydo.utils.pagination import CustomPagination
 from .serializers import (CategoryWriteSerializer,
                           ProductWriteSerializer,
                           AdditionalProductInfoWriteSerializer,
@@ -273,6 +275,16 @@ class UserEditAPI(APIView):
             return Response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class CommentListAPI(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsManager]
+    serializer_class = CommentReadSerializer
+    queryset = Comment.objects.all()
+    pagination_class = CustomPagination
+    
     
 
 

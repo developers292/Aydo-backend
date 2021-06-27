@@ -136,7 +136,7 @@ class Comment(models.Model):
     verified_and_active = VerifiedActiveManager()
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
 
     def __str__(self):
         return f'Comment by {self.owner.phone_no} on {self.product}'

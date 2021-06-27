@@ -52,4 +52,9 @@ urlpatterns = [
     api.UserEditAPI.as_view(),
     name='user_edit'
   ),
+  path(
+    'comments',
+     api.CommentListAPI.as_view(),
+     name='list_comments'
+  ),
 ]
