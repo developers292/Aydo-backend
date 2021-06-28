@@ -39,5 +39,6 @@ __pypackages__/
 
 
 # Production
-Aydo/settings_local.py 
+Aydo/settings_local.py
+settings_local.py
 
