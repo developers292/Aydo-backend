@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-erm$$xfv*46+f689=8cpu-69iexc@acb_3o#6#6mmgkz_sagns'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -149,11 +149,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 ZARINPAL = {
     'MERCHANT':'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-    'CallbackURL':'http://localhost:8000/api/payment/zarinpal-verify',
-    'wsdl':'https://banktest.ir/gateway/zarinpal/pg/services/WebGate/wsdl?wsdl'
+    'CallbackURL':'',
+    'wsdl':''
 }
 
 
 KAVENEGAR = {
-    'API_KEY':'744F584736306B51593231367535416C33636749446141353672726939794734787557626C5146744166343D'
+    'API_KEY':''
 }
+
+
+try:
+    from .settings_local import *
+except ImportError:
+    pass
