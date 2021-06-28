@@ -40,7 +40,13 @@ INSTALLED_APPS = [
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_THROTTLE_RATES': {
+        'login':'4/minute',
+        'reset_password':'12/day',
+        'change_password':'12/day',
+        'sms_verification':'24/day'
+    }
 }
 
 REST_KNOX = {

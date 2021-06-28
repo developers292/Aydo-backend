@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.throttling import ScopedRateThrottle
 from .serializers import (UserSerializer, RegisterSerializer,
                           LoginSerializer, ChangePasswordSerializer,
                           ResetPasswordSerializer)
@@ -10,6 +11,7 @@ from .serializers import (UserSerializer, RegisterSerializer,
 # Register API
 class RegisterAPI(generics.GenericAPIView):
   serializer_class = RegisterSerializer
+  permission_classes = [permissions.AllowAny,]
 
   def post(self, request, *args, **kwargs):
 
@@ -21,10 +23,16 @@ class RegisterAPI(generics.GenericAPIView):
     }
     return Response(context)
 
+
+
 # Login API
 class LoginAPI(generics.GenericAPIView):
+  permission_classes = [permissions.AllowAny,]
   serializer_class = LoginSerializer
-
+  throttle_scope = 'login'
+  throttle_classes = [ScopedRateThrottle,]
+  
+  
   def post(self, request, *args, **kwargs):
 
     serializer = self.get_serializer(data=request.data)
@@ -39,6 +47,7 @@ class LoginAPI(generics.GenericAPIView):
       "user": UserSerializer(user, context=self.get_serializer_context()).data,
       "token": token
     })
+
 
 # Get User API
 class UserDetailAPI(generics.RetrieveUpdateAPIView):
@@ -57,7 +66,9 @@ class UserDetailAPI(generics.RetrieveUpdateAPIView):
 class ChangePasswordAPI(generics.GenericAPIView):
   permission_classes = [permissions.IsAuthenticated,]
   serializer_class = ChangePasswordSerializer
-
+  throttle_scope = 'change_password'
+  throttle_classes = [ScopedRateThrottle,]
+  
   def get_object(self):
     return self.request.user
   
@@ -69,8 +80,11 @@ class ChangePasswordAPI(generics.GenericAPIView):
     return Response(status=status.HTTP_200_OK)
 
 
+
 class ResetPasswordAPI(APIView):
   permission_classes = [permissions.AllowAny,]
+  throttle_scope = 'reset_password'
+  throttle_classes = [ScopedRateThrottle,]
 
   def post(self, request):
 
