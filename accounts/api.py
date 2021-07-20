@@ -59,7 +59,7 @@ class UserDetailAPI(generics.RetrieveUpdateAPIView):
   
   def get_serializer(self, *args, **kwargs):
     kwargs['partial'] = True
-    return super(UserAPI, self).get_serializer(*args, **kwargs)
+    return super(UserDetailAPI, self).get_serializer(*args, **kwargs)
 
 
 
